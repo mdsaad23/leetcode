@@ -1,0 +1,38 @@
+"""
+LeetCode - Valid Palindrome
+Problem: https://leetcode.com/problems/valid-palindrome/
+
+PROBLEM DESCRIPTION:
+Given a string s, determine if it is a palindrome, considering only alphanumeric 
+characters and ignoring cases. A palindrome is a word, phrase, number, or other 
+sequence of characters that reads the same forward and backward.
+
+SOLUTION APPROACH:
+1. Remove all non-alphanumeric characters from the input string
+2. Convert the string to uppercase for case-insensitive comparison
+3. Use two pointers to compare characters from both ends moving toward the center
+4. If any pair of characters don't match, it's not a palindrome
+5. If all pairs match, it's a valid palindrome
+"""
+
+import re
+
+
+class Solution(object):
+    def isPalindrome(self, s):
+        """
+        :type s: str
+        :rtype: bool
+        """
+        # Remove all non-alphanumeric characters using regex
+        s = re.sub(r'[^a-zA-Z0-9]', '', s)
+        
+        # Convert to uppercase for case-insensitive comparison
+        s = s.upper()
+        
+        # Compare characters from both ends moving inward (two-pointer approach)
+        for m in range(len(s) // 2):
+            if s[m] != s[len(s) - m - 1]:
+                return False
+        
+        return True
