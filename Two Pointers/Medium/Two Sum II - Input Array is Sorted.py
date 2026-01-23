@@ -21,39 +21,61 @@ Input: numbers = [2,3,4], target = 6
 Output: [1,3]
 """
 
-"""
-SOLUTION APPROACH:
-This solution utilizes an Optimized Brute Force approach that leverages the sorted property of the array to reduce unnecessary checks (pruning).
-
-1. Outer Loop: Iterate through the array with index 'i' to select the first number.
-2. Immediate Checks:
-   - Check the adjacent element (i+1). If they sum to 'target', return immediately.
-   - Duplicate Handling: If numbers[i] is the same as the next number (and they didn't sum to target), 
-     skip this iteration to avoid redundant work.
-3. Inner Loop: Iterate through 'j' starting from 'i+1' to find the second number.
-4. Early Exit (Pruning): Since the array is sorted, if numbers[i] + numbers[j] exceeds the 'target', 
-   we break the inner loop immediately. Any subsequent numbers will also be too large.
-5. Match: If the sum equals 'target', return the 1-based indices.
-"""
-
 class Solution(object):
+    
+    # -----------------------------------------------------------
+    # APPROACH 1: Optimized Brute Force (Your Original Solution)
+    # -----------------------------------------------------------
+    """
+    SOLUTION APPROACH 1:
+    Optimized Brute Force - O(N^2) Time
+    
+    1. Outer Loop: Iterate through the array with index 'i' to select the first number.
+    2. Optimization (Neighbors): Check if neighbors sum to target immediately.
+    3. Optimization (Duplicates): Skip duplicate 'i' values to avoid redundant work.
+    4. Inner Loop: Iterate through 'j' from 'i+1'.
+    5. Pruning: Since the array is sorted, break the inner loop if sum > target.
+    """
+    def twoSum_Approach1(self, numbers, target):
+        for i in range(len(numbers)-1):
+            if numbers[i]+numbers[i+1]==target:
+                return [i+1,i+2]
+            elif numbers[i]==numbers[i+1]:
+                continue
+            for j in range(i+1,len(numbers)):
+                if numbers[i]+numbers[j]>target:
+                    break
+                elif numbers[i]+numbers[j]==target:
+                    return [i+1,j+1]
+
+    # -----------------------------------------------------------
+    # APPROACH 2: Two-Pointer Convergence (Optimal)
+    # -----------------------------------------------------------
+    """
+    SOLUTION APPROACH 2:
+    Two-Pointer Convergence - O(N) Time
+    
+    1. Initialize two pointers: 'left' at start (0) and 'right' at end (len-1).
+    2. Loop while 'left' < 'right':
+       - Calculate sum = numbers[left] + numbers[right].
+       - If sum == target: We found the pair. Return 1-based indices.
+       - If sum > target: The sum is too big. We must pick a smaller number, 
+         so move 'right' pointer down (decrement).
+       - If sum < target: The sum is too small. We must pick a larger number, 
+         so move 'left' pointer up (increment).
+    """
     def twoSum(self, numbers, target):
         """
         :type numbers: List[int]
         :type target: int
         :rtype: List[int]
         """
-        for i in range(len(numbers)-1):
-            # Optimization 1: Check immediate neighbor first
-            if numbers[i]+numbers[i+1]==target:
-                return [i+1,i+2]
-            # Optimization 2: Skip duplicates to speed up iteration
-            elif numbers[i]==numbers[i+1]:
-                continue
-            
-            for j in range(i+1,len(numbers)):
-                # Optimization 3: Pruning - Stop if sum exceeds target (because array is sorted)
-                if numbers[i]+numbers[j]>target:
-                    break
-                elif numbers[i]+numbers[j]==target:
-                    return [i+1,j+1]
+        left = 0
+        right = len(numbers)-1
+        while left<right:
+            if numbers[left]+numbers[right]==target:
+                return [left+1,right+1]
+            elif numbers[left]+numbers[right]>target:
+                right-=1
+            elif numbers[left]+numbers[right]<target:
+                left+=1
