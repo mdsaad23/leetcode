@@ -1,0 +1,59 @@
+"""
+PROBLEM DESCRIPTION:
+383. Ransom Note
+
+Given two strings ransomNote and magazine, return true if ransomNote can be constructed 
+by using the letters from magazine and false otherwise.
+
+Each letter in magazine can only be used once in ransomNote.
+
+Example 1:
+Input: ransomNote = "a", magazine = "b"
+Output: false
+
+Example 2:
+Input: ransomNote = "aa", magazine = "ab"
+Output: false
+
+Example 3:
+Input: ransomNote = "aa", magazine = "aab"
+Output: true
+"""
+
+"""
+SOLUTION APPROACH:
+This solution uses a Frequency Map (Hash Map) to count available characters.
+
+1. Dictionary Initialization: Create an empty dictionary 'b' to serve as a frequency counter.
+2. Build Frequency Map: Iterate through the 'magazine' string.
+   - If a character is already in the dictionary, increment its count.
+   - If not, add it with a count of 1.
+   This tells us exactly how many of each letter we have available to use.
+3. Verification: Iterate through the 'ransomNote' string.
+   - Check if the current character exists in our dictionary 'b'.
+   - If it exists but the count is 0, we have used all instances of that letter. Return False.
+   - If it exists and count > 0, decrement the count (consume the letter).
+   - If the character is not in the dictionary at all, return False.
+4. Result: If the loop completes without returning False, it means we successfully found 
+   all characters needed. Return True.
+"""
+
+class Solution:
+    def canConstruct(self, ransomNote: str, magazine: str) -> bool:
+
+        b={}
+
+        for i in range(len(magazine)):
+            if magazine[i] in b:
+                b[magazine[i]]+=1
+            else:
+                b[magazine[i]]=1
+        for i in range(len(ransomNote)):
+            if ransomNote[i] in b:
+                if b[ransomNote[i]]==0:
+                    return False
+                else:
+                    b[ransomNote[i]]-=1
+            else:
+                return False
+        return True
