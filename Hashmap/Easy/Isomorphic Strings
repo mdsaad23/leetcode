@@ -67,3 +67,4 @@ class Solution(object):
                 else:
                     m[t[i]]=s[i]
         return True
+    
