@@ -1,0 +1,69 @@
+"""
+PROBLEM DESCRIPTION:
+205. Isomorphic Strings
+
+Given two strings s and t, determine if they are isomorphic.
+Two strings s and t are isomorphic if the characters in s can be replaced to get t.
+
+All occurrences of a character must be replaced with another character while preserving 
+the order of characters. No two characters may map to the same character, but a 
+character may map to itself.
+
+Example 1:
+Input: s = "egg", t = "add"
+Output: true
+
+Example 2:
+Input: s = "foo", t = "bar"
+Output: false (because 'o' cannot map to both 'a' and 'r')
+
+Example 3:
+Input: s = "paper", t = "title"
+Output: true
+"""
+
+"""
+SOLUTION APPROACH:
+Bi-directional Mapping Strategy.
+
+To ensure two strings are isomorphic, we must enforce a One-to-One (Bijection) relationship. 
+This requires checking two conditions simultaneously:
+
+1. Forward Mapping (s -> t): Every character in 's' must consistently map to the same character in 't'.
+   - We use dictionary 'k' to store these mappings.
+2. Reverse Mapping (t -> s): No two distinct characters in 's' can map to the same character in 't'.
+   - We use dictionary 'm' to ensure that a character in 't' hasn't already been claimed by a different character in 's'.
+
+If we find any inconsistency in either direction during the loop, we return False.
+"""
+
+class Solution(object):
+    def isIsomorphic(self, s, t):
+        """
+        :type s: str
+        :type t: str
+        :rtype: bool
+        """
+        k={} # Maps s -> t
+        m={} # Maps t -> s
+        
+        if len(s)!=len(t):
+            return False
+        else:
+            for i in range(len(s)):
+                # 1. Check Forward Mapping (s -> t)
+                if s[i] in k:
+                    # If we have seen s[i] before, it MUST map to the same t[i] as before
+                    if k[s[i]]!=t[i]:
+                        return False
+                else:
+                    k[s[i]]=t[i]
+                
+                # 2. Check Reverse Mapping (t -> s)
+                if t[i] in m:
+                    # If we have seen t[i] before, it MUST map to the same s[i] as before
+                    if m[t[i]]!=s[i]:
+                        return False
+                else:
+                    m[t[i]]=s[i]
+        return True
