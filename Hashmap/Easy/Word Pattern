@@ -1,0 +1,67 @@
+"""
+PROBLEM DESCRIPTION:
+290. Word Pattern
+
+Given a pattern and a string s, find if s follows the same pattern.
+
+Here follow means a full match, such that there is a bijection (one-to-one and onto) 
+between a letter in pattern and a non-empty word in s.
+
+Example 1:
+Input: pattern = "abba", s = "dog cat cat dog"
+Output: true
+
+Example 2:
+Input: pattern = "abba", s = "dog cat cat fish"
+Output: false
+
+Example 3:
+Input: pattern = "aaaa", s = "dog cat cat dog"
+Output: false
+"""
+
+"""
+SOLUTION APPROACH:
+Bi-directional Mapping using a Single Hash Map with "Tagged" Keys.
+
+1. Pre-processing: Split the string 's' into a list of words.
+2. Base Case: If the number of characters in 'pattern' does not match the number of words, 
+   return False immediately.
+3. Unified Dictionary: Instead of using two separate dictionaries (one for char->word, 
+   one for word->char), this solution uses a single dictionary 'seen' with composite keys.
+   - We tag pattern characters with a prefix, e.g., ("p", 'a').
+   - We tag words with a different prefix, e.g., ("s", "dog").
+   This prevents collisions if a word happens to be the same as a pattern character 
+   (e.g., pattern="a", word="a").
+4. Iteration: Loop through the pattern characters and words simultaneously.
+   - Check if the pattern char is already mapped to a different word.
+   - Check if the word is already mapped to a different pattern char.
+   - If mappings are consistent (or new), update the dictionary.
+"""
+
+class Solution(object):
+    def wordPattern(self, pattern, s):
+        """
+        :type pattern: str
+        :type s: str
+        :rtype: bool
+        """
+        s_split = s.split()
+        if len(s_split)!=len(pattern):
+            return False
+        seen={}
+        # Note: variable 's' here shadows the input string 's', effectively becoming the current word
+        for p,s in zip(pattern,s_split):
+            key_p = ("p",p) # Tag key for pattern character
+            key_s = ("s",s) # Tag key for word
+
+            # Check Forward Mapping (Pattern -> Word)
+            if key_p in seen and seen[key_p]!=s:
+                return False
+            # Check Reverse Mapping (Word -> Pattern)
+            if key_s in seen and seen[key_s]!=p:
+                return False
+            
+            seen[key_p] = s
+            seen[key_s] = p
+        return True
