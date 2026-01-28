@@ -1,4 +1,12 @@
 """
+I had trouble doing this even though this was similar to Ransom Note. Reason for trouble - 
+1. I did not want to solve it with 2 hash tables, only 1
+2. I was unsure if long strings could be keys in a hash table.
+
+Learnings - 
+1. Only immutable values can be keys in dictionaries - integer, float, string, tuples
+2. Tuples differ from sets. Sets are mutable (changeable). If I change any immutable value, it throws away the previous value and stores the new value in a new memory location
+
 PROBLEM DESCRIPTION:
 290. Word Pattern
 
