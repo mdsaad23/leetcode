@@ -1,0 +1,130 @@
+"""
+PROBLEM STATEMENT:
+Given an array of strings 'strs', group the anagrams together. You can return the answer in any order.
+
+An Anagram is a word or phrase formed by rearranging the letters of a different word or phrase, 
+typically using all the original letters exactly once.
+
+Example:
+Input: strs = ["eat","tea","tan","ate","nat","bat"]
+Output: [["bat"],["nat","tan"],["ate","eat","tea"]]
+"""
+
+# =============================================================================
+# SOLUTION 1 ANALYSIS (Provided by User)
+# =============================================================================
+"""
+SOLUTION 1 APPROACH: Sorting-Based Categorization
+• Iterates through each string in the input list.
+• Uses the sorted version of each string as a unique key for a hash map (dictionary).
+• Strings that are anagrams will result in the same sorted string.
+• Appends the original string to the list associated with its sorted key.
+
+TIME COMPLEXITY: O(N * K log K)
+• N is the number of strings and K is the maximum length of a string.
+• Sorting each string takes O(K log K), and we do this N times.
+
+SPACE COMPLEXITY: O(N * K)
+• We store all strings in a hash map.
+"""
+
+from collections import defaultdict
+
+class Solution1(object):
+    def groupAnagrams(self, strs):
+        """
+        :type strs: List[str]
+        :rtype: List[List[str]]
+        """
+        fin = defaultdict(list)
+        for i in strs:
+            combi="".join(sorted(i))
+            fin[combi].append(i)
+        return fin.values()
+
+
+# =============================================================================
+# SOLUTION 2 ANALYSIS (Provided by User)
+# =============================================================================
+"""
+SOLUTION 2 APPROACH: Character Count Frequency (Optimal)
+• Instead of sorting, this approach uses a frequency array of size 26 (for a-z).
+• It counts the occurrences of each character in a string.
+• The tuple representation of this count array is used as a hash map key.
+• This avoids the O(K log K) sorting overhead, replacing it with O(K) counting.
+
+TIME COMPLEXITY: O(N * K)
+• We iterate through N strings and for each string, we iterate through K characters.
+
+SPACE COMPLEXITY: O(N * K)
+• To store the result in the hash map.
+"""
+
+class Solution2(object):
+    def groupAnagrams(self, strs):
+        """
+        :type strs: List[str]
+        :rtype: List[List[str]]
+        """
+        fin = defaultdict(list)
+        for i in strs:
+            count=[0]*26
+            for alph in i:
+                count[ord(alph)-ord("a")]+=1
+            fin[tuple(count)].append(i)
+        return fin.values()
+
+
+# =============================================================================
+# OPTIMAL APPROACH
+# =============================================================================
+"""
+OPTIMAL SOLUTION SUMMARY:
+• The character frequency counting method (Solution 2) is the most efficient approach.
+• It achieves linear time complexity relative to the total number of characters in the input.
+• Key optimization: Using a tuple of counts as a key is faster than sorting for long strings.
+
+OPTIMAL TIME COMPLEXITY: O(N * K)
+OPTIMAL SPACE COMPLEXITY: O(N * K)
+"""
+
+class OptimalSolution(object):
+    def groupAnagrams(self, strs):
+        # Create a map where key is a character count tuple and value is a list of anagrams
+        ans = defaultdict(list)
+        
+        for s in strs:
+            # Initialize frequency list for 26 lowercase English letters
+            count = [0] * 26
+            for c in s:
+                count[ord(c) - ord('a')] += 1
+            # Lists cannot be keys, so convert to tuple
+            ans[tuple(count)].append(s)
+            
+        return list(ans.values())
+
+
+# =============================================================================
+# REAL-WORLD APPLICATION
+# =============================================================================
+"""
+REAL-WORLD USAGE:
+
+1. Search Engine Optimization & Deduplication:
+   Search engines use similar logic to identify "near-duplicate" content or different 
+   permutations of keywords to group related search results and filter out spam.
+
+2. Genome Sequencing & Bioinformatics:
+   Identifying permutations of nucleotide sequences (DNA/RNA) is crucial for finding 
+   conserved patterns across different species where the order might change but 
+   the composition remains the same.
+
+3. Database Indexing (Multiset Processing):
+   When processing large datasets where order is irrelevant but frequency matters 
+   (e.g., inventory management or SKU grouping), hash-based frequency counting 
+   is used to quickly categorize millions of records.
+
+4. Cryptography:
+   Frequency analysis of characters is a fundamental step in breaking classical 
+   substitution ciphers and identifying patterns in encrypted text.
+"""
