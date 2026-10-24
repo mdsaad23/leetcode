@@ -89,3 +89,31 @@ concept in computer science used across various high-scale systems:
    The "increment for entry, decrement for exit" logic is used to maintain 
    real-time stock levels in high-concurrency systems.
 """
+
+
+"""
+Attempt 2
+I arrived at the same logic again.
+I think we can also use sets to some degree, but not sure about the count of characters in sets.
+Another way would be to k.pop -> need to learn this technique
+"""
+
+class Solution:
+    def isAnagram(self, s: str, t: str) -> bool:
+        k={}
+        if len(s) != len(t):
+            return False
+        for i in range(len(s)):
+            if s[i] in k:
+                k[s[i]]+=1
+            else:
+                k[s[i]]=1
+            if t[i] in k:
+                k[t[i]]-=1
+            else:
+                k[t[i]]=-1
+        for i in k:
+            if k[i]>0:
+                return False
+        return True
+        
